@@ -14,7 +14,7 @@ export interface Viagem {
   id: string; numero: string; data: string; clienteId: string; origem: string; destino: string;
   motorista: string; placa: string; valor: number; statusProc: StatusProc; statusEnvio: StatusEnvio;
   etapa: number; // index of current/failed step (9 = all done)
-  erro?: string;
+  erro?: string | undefined;
 }
 export interface Documento {
   id: string; viagemId: string; tipo: TipoDoc; nome: string; tamanho: string; data: string; status: StatusDoc;
@@ -35,7 +35,7 @@ export const ETAPAS = [
 
 let seed = 42;
 const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
-const pick = <T,>(a: T[]) => a[Math.floor(rnd() * a.length)];
+const pick = <T,>(a: T[]): T => a[Math.floor(rnd() * a.length)]!;
 
 export const clientes: Cliente[] = [
   ["Transportes Rodobens Ltda", "São Paulo/SP", "Marcos Lima", "rodobens.com.br"],
@@ -46,8 +46,9 @@ export const clientes: Cliente[] = [
   ["Celulose Litoral S.A.", "Três Lagoas/MS", "Patrícia Gomes", "celuloselitoral.com.br"],
   ["Bebidas Nordeste Ltda", "Recife/PE", "Thiago Alves", "bebidasne.com.br"],
   ["Cooperativa Grãos do Oeste", "Cascavel/PR", "Luciana Ferraz", "graosoeste.coop.br"],
-].map(([nome, cidade, contato, dom], i) => ({
-  id: `c${i + 1}`, nome, cidade, contato,
+].map(([nome, cidade, contato, dom]: string[], i) => ({
+  nome: nome!, cidade: cidade!, contato: contato!,
+  id: `c${i + 1}`,
   cnpj: `${10 + i * 7}.${300 + i * 41}.${120 + i * 13}/0001-${10 + i * 9}`,
   email: `fiscal@${dom}`, emailsCopia: [`logistica@${dom}`],
   telefone: `(11) 9${8000 + i * 137}-${1000 + i * 311}`, ativo: i !== 6,
@@ -77,10 +78,10 @@ export const viagens: Viagem[] = Array.from({ length: 36 }, (_, i) => {
   return {
     id: `v${i + 1}`, numero: `VG-${(48210 - i).toString()}`,
     data: fmt(new Date(base - i * 1000 * 60 * 60 * 9.5)),
-    clienteId: clientes[i % clientes.length].id,
+    clienteId: clientes[i % clientes.length]!.id,
     origem: pick(cidades), destino: pick(cidades), motorista: pick(motoristas),
     placa: `${pick(["QRT", "BRA", "FXK", "MNP", "RTE"])}${Math.floor(rnd() * 9)}${pick(["A", "C", "F", "J"])}${10 + Math.floor(rnd() * 89)}`,
-    valor: Math.round(2500 + rnd() * 18000), statusProc, statusEnvio, etapa, erro,
+    valor: Math.round(2500 + rnd() * 18000), statusProc, statusEnvio, etapa, ...(erro ? { erro } : {}),
   };
 });
 
