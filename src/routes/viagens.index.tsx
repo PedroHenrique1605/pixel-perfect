@@ -5,10 +5,10 @@ import { toast } from "sonner";
 import { DataTable, PageHeader, Panel, StatusBadge, btnGhost, cellCls, inputCls, rowCls } from "@/components/kit";
 import { clientes, documentos, fmtData, getCliente, viagens } from "@/lib/mock-data";
 
-type Search = { status?: string };
+type Search = { status?: string | undefined };
 
 export const Route = createFileRoute("/viagens/")({
-  validateSearch: (s: Record<string, unknown>): Search => ({ status: typeof s.status === "string" ? s.status : undefined }),
+  validateSearch: (s: Record<string, unknown>): Search => ({ status: typeof s["status"] === "string" ? s["status"] : undefined }),
   head: () => ({
     meta: [
       { title: "Viagens — Automação de Viagens" },

@@ -15,7 +15,7 @@ export const Route = createFileRoute("/ajuda")({
   component: Ajuda,
 });
 
-const faq = [
+const faq: [string, string][] = [
   ["Como funciona o fluxo de automação?", "Viagem → Documentos → Cliente → E-mail → Envio → Histórico. Após a geração da viagem, o sistema localiza o ZIP, organiza XML e PDFs, identifica o cliente e o e-mail e envia os documentos."],
   ["O que fazer quando uma viagem apresenta erro?", "Abra a viagem, veja em qual etapa o fluxo parou e use “Reprocessar” após corrigir a causa (ex.: e-mail não cadastrado)."],
   ["Como reenviar documentos?", "Na página da viagem ou em Envios, abra o detalhe e clique em “Tentar novamente”."],
